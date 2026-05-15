@@ -1,0 +1,9 @@
+node_modules
+dist
+brand-assets
+.env
+.env.local
+.DS_Store
+*.log
+.playwright-mcp
+SCR-*.png
