@@ -11,11 +11,7 @@ import {
 } from "lucide-react";
 import { heroFlowSteps, heroPhrases } from "../data/siteContent";
 
-type HeroProps = {
-  onOpenCalendly: () => void;
-};
-
-export function Hero({ onOpenCalendly }: HeroProps) {
+export function Hero() {
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [typedText, setTypedText] = useState(heroPhrases[0]);
   const prefersReducedMotion = useReducedMotion();
@@ -83,10 +79,10 @@ export function Hero({ onOpenCalendly }: HeroProps) {
           </div>
 
           <div className="hero-cta-row flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <button type="button" className="btn btn-primary btn-large" onClick={onOpenCalendly}>
+            <a href="#book-call" className="btn btn-primary btn-large">
               Let&apos;s discuss your idea
               <ArrowRight size={18} aria-hidden="true" />
-            </button>
+            </a>
             <a href="#contact-form" className="btn btn-secondary btn-large">
               Tell us what you want to build
             </a>

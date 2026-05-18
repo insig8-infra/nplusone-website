@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { navLinks } from "../data/siteContent";
 
-type HeaderProps = {
-  onOpenCalendly: () => void;
-};
-
-export function Header({ onOpenCalendly }: HeaderProps) {
+export function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -17,10 +13,6 @@ export function Header({ onOpenCalendly }: HeaderProps) {
   }, [isOpen]);
 
   const closeMenu = () => setIsOpen(false);
-  const openCalendly = () => {
-    closeMenu();
-    onOpenCalendly();
-  };
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 py-3 sm:px-5">
@@ -42,20 +34,20 @@ export function Header({ onOpenCalendly }: HeaderProps) {
         </nav>
 
         <div className="flex items-center gap-2">
-          <button
-            type="button"
+          <a
+            href="#book-call"
             className="btn btn-primary header-primary-cta"
-            onClick={openCalendly}
+            onClick={closeMenu}
           >
             Let&apos;s discuss your idea
-          </button>
-          <button
-            type="button"
+          </a>
+          <a
+            href="#book-call"
             className="btn btn-primary header-compact-cta px-4 py-2 text-sm"
-            onClick={openCalendly}
+            onClick={closeMenu}
           >
             Discuss
-          </button>
+          </a>
           <button
             type="button"
             className="icon-button header-menu-button"

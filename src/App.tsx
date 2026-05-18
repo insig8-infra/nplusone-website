@@ -26,9 +26,8 @@ import {
   Workflow,
   type LucideIcon,
 } from "lucide-react";
-import { useCallback, useState } from "react";
 import { MotionConfig, motion } from "framer-motion";
-import { CalendlyModal } from "./components/CalendlyModal";
+import { CalendlyInline } from "./components/CalendlyInline";
 import { ContactForm } from "./components/ContactForm";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
@@ -78,16 +77,12 @@ function getIcon(name: string) {
 }
 
 function App() {
-  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
-  const openCalendly = useCallback(() => setIsCalendlyOpen(true), []);
-  const closeCalendly = useCallback(() => setIsCalendlyOpen(false), []);
-
   return (
     <MotionConfig reducedMotion="user">
       <div className="min-h-screen bg-[#f7f7f6] text-stone-950 antialiased">
-        <Header onOpenCalendly={openCalendly} />
+        <Header />
         <main>
-          <Hero onOpenCalendly={openCalendly} />
+          <Hero />
 
           <Section
             id="what-we-do"
@@ -229,6 +224,22 @@ function App() {
           </Section>
 
           <Section
+            id="book-call"
+            eyebrow="Book a call"
+            title="Schedule a discovery call."
+            description="Choose a time that works for you. The scheduler stays inside the page, so you can book a slot and continue exploring NplusOne without losing context."
+            className="booking-section"
+          >
+            <CalendlyInline calendlyUrl={calendlyUrl} />
+            <div className="booking-after-row">
+              <span>No tech background needed. Bring the problem, workflow or product idea.</span>
+              <a href="#contact-form" className="footer-link">
+                Prefer writing first? Send an enquiry
+              </a>
+            </div>
+          </Section>
+
+          <Section
             id="contact"
             eyebrow="Contact"
             title="Have an idea? Let's talk."
@@ -260,13 +271,13 @@ function App() {
                 </div>
 
                 <div className="contact-route-grid">
-                  <button type="button" className="contact-route contact-route-button" onClick={openCalendly}>
+                  <a href="#book-call" className="contact-route">
                     <CalendarDays className="h-5 w-5" aria-hidden="true" />
                     <span>
                       <strong>Book a discovery call</strong>
-                      <small>Schedule here without leaving the site</small>
+                      <small>Use the embedded scheduler above</small>
                     </span>
-                  </button>
+                  </a>
                   <a href={`mailto:${contactEmail}`} className="contact-route">
                     <Mail className="h-5 w-5" aria-hidden="true" />
                     <span>
@@ -303,8 +314,7 @@ function App() {
             </div>
           </Section>
         </main>
-        <Footer onOpenCalendly={openCalendly} />
-        <CalendlyModal isOpen={isCalendlyOpen} calendlyUrl={calendlyUrl} onClose={closeCalendly} />
+        <Footer />
       </div>
     </MotionConfig>
   );
