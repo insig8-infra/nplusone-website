@@ -26,7 +26,9 @@ import {
   Workflow,
   type LucideIcon,
 } from "lucide-react";
+import { useCallback, useState } from "react";
 import { MotionConfig, motion } from "framer-motion";
+import { CalendlyModal } from "./components/CalendlyModal";
 import { ContactForm } from "./components/ContactForm";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
@@ -76,12 +78,16 @@ function getIcon(name: string) {
 }
 
 function App() {
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+  const openCalendly = useCallback(() => setIsCalendlyOpen(true), []);
+  const closeCalendly = useCallback(() => setIsCalendlyOpen(false), []);
+
   return (
     <MotionConfig reducedMotion="user">
       <div className="min-h-screen bg-[#f7f7f6] text-stone-950 antialiased">
-        <Header />
+        <Header onOpenCalendly={openCalendly} />
         <main>
-          <Hero />
+          <Hero onOpenCalendly={openCalendly} />
 
           <Section
             id="what-we-do"
@@ -254,13 +260,13 @@ function App() {
                 </div>
 
                 <div className="contact-route-grid">
-                  <a href={calendlyUrl} target="_blank" rel="noreferrer" className="contact-route">
+                  <button type="button" className="contact-route contact-route-button" onClick={openCalendly}>
                     <CalendarDays className="h-5 w-5" aria-hidden="true" />
                     <span>
                       <strong>Book a discovery call</strong>
-                      <small>Calendly opens in a new tab</small>
+                      <small>Schedule here without leaving the site</small>
                     </span>
-                  </a>
+                  </button>
                   <a href={`mailto:${contactEmail}`} className="contact-route">
                     <Mail className="h-5 w-5" aria-hidden="true" />
                     <span>
@@ -297,7 +303,8 @@ function App() {
             </div>
           </Section>
         </main>
-        <Footer />
+        <Footer onOpenCalendly={openCalendly} />
+        <CalendlyModal isOpen={isCalendlyOpen} calendlyUrl={calendlyUrl} onClose={closeCalendly} />
       </div>
     </MotionConfig>
   );

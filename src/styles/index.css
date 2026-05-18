@@ -29,6 +29,10 @@ body {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
+button {
+  font: inherit;
+}
+
 #root {
   width: 100%;
   min-height: 100vh;
@@ -427,6 +431,7 @@ h1 {
   line-height: 1.1;
   font-weight: 800;
   text-decoration: none;
+  cursor: pointer;
   transition:
     transform 180ms ease,
     box-shadow 180ms ease,
@@ -521,6 +526,14 @@ h1 {
 .nav-link:hover,
 .footer-link:hover {
   color: #171412;
+}
+
+.footer-link-button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  text-align: inherit;
+  cursor: pointer;
 }
 
 .mobile-nav-link {
@@ -810,6 +823,13 @@ h1 {
   text-decoration: none;
 }
 
+.contact-route-button {
+  width: 100%;
+  border-color: #e7e5e4;
+  text-align: left;
+  cursor: pointer;
+}
+
 .contact-route:hover {
   border-color: #a8a29e;
 }
@@ -927,6 +947,87 @@ h1 {
 .form-status-error {
   background: #fef2f2;
   color: #b91c1c;
+}
+
+.calendly-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  background: rgba(23, 20, 18, 0.46);
+  padding: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.calendly-modal {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(68rem, 100%);
+  height: min(48rem, calc(100vh - 2rem));
+  overflow: hidden;
+  border: 1px solid rgba(231, 229, 228, 0.88);
+  border-radius: 1.6rem;
+  background: #fff;
+  box-shadow: 0 34px 90px rgba(23, 20, 18, 0.26);
+}
+
+.calendly-modal-header,
+.calendly-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.calendly-modal-header {
+  border-bottom: 1px solid #e7e5e4;
+}
+
+.calendly-modal-header p {
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #78716c;
+}
+
+.calendly-modal-header h2 {
+  margin-top: 0.25rem;
+  font-size: clamp(1.15rem, 2.4vw, 1.65rem);
+  line-height: 1.15;
+  font-weight: 850;
+  color: #171412;
+}
+
+.calendly-frame-shell {
+  min-height: 0;
+  overflow: hidden;
+  background: #f5f5f4;
+}
+
+.calendly-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  background: #fff;
+}
+
+.calendly-modal-footer {
+  border-top: 1px solid #e7e5e4;
+  color: #57534e;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.calendly-modal-footer .footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
 }
 
 .faq-item {
@@ -1114,6 +1215,26 @@ h1 {
   .build-flow-rail {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  .calendly-modal-backdrop {
+    padding: 0.55rem;
+  }
+
+  .calendly-modal {
+    height: calc(100vh - 1.1rem);
+    border-radius: 1.1rem;
+  }
+
+  .calendly-modal-header,
+  .calendly-modal-footer {
+    align-items: flex-start;
+    padding: 0.85rem;
+  }
+
+  .calendly-modal-footer {
+    flex-direction: column;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { calendlyUrl, navLinks } from "../data/siteContent";
+import { navLinks } from "../data/siteContent";
 
-export function Header() {
+type HeaderProps = {
+  onOpenCalendly: () => void;
+};
+
+export function Header({ onOpenCalendly }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -13,6 +17,10 @@ export function Header() {
   }, [isOpen]);
 
   const closeMenu = () => setIsOpen(false);
+  const openCalendly = () => {
+    closeMenu();
+    onOpenCalendly();
+  };
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 py-3 sm:px-5">
@@ -34,22 +42,20 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <a
-            href={calendlyUrl}
-            target="_blank"
-            rel="noreferrer"
+          <button
+            type="button"
             className="btn btn-primary header-primary-cta"
+            onClick={openCalendly}
           >
             Let&apos;s discuss your idea
-          </a>
-          <a
-            href={calendlyUrl}
-            target="_blank"
-            rel="noreferrer"
+          </button>
+          <button
+            type="button"
             className="btn btn-primary header-compact-cta px-4 py-2 text-sm"
+            onClick={openCalendly}
           >
             Discuss
-          </a>
+          </button>
           <button
             type="button"
             className="icon-button header-menu-button"

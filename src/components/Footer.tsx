@@ -1,6 +1,10 @@
-import { calendlyUrl, contactEmail, whatsappLabel, whatsappUrl } from "../data/siteContent";
+import { contactEmail, whatsappLabel, whatsappUrl } from "../data/siteContent";
 
-export function Footer() {
+type FooterProps = {
+  onOpenCalendly: () => void;
+};
+
+export function Footer({ onOpenCalendly }: FooterProps) {
   const year = new Date().getFullYear();
 
   return (
@@ -18,9 +22,9 @@ export function Footer() {
           <a href={`mailto:${contactEmail}`} className="footer-link">
             {contactEmail}
           </a>
-          <a href={calendlyUrl} target="_blank" rel="noreferrer" className="footer-link">
+          <button type="button" className="footer-link footer-link-button" onClick={onOpenCalendly}>
             Calendly
-          </a>
+          </button>
           <a href={whatsappUrl} target="_blank" rel="noreferrer" className="footer-link">
             {whatsappLabel}
           </a>

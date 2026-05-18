@@ -9,9 +9,13 @@ import {
   Sparkles,
   Workflow,
 } from "lucide-react";
-import { calendlyUrl, heroFlowSteps, heroPhrases } from "../data/siteContent";
+import { heroFlowSteps, heroPhrases } from "../data/siteContent";
 
-export function Hero() {
+type HeroProps = {
+  onOpenCalendly: () => void;
+};
+
+export function Hero({ onOpenCalendly }: HeroProps) {
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [typedText, setTypedText] = useState(heroPhrases[0]);
   const prefersReducedMotion = useReducedMotion();
@@ -79,10 +83,10 @@ export function Hero() {
           </div>
 
           <div className="hero-cta-row flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <a href={calendlyUrl} target="_blank" rel="noreferrer" className="btn btn-primary btn-large">
+            <button type="button" className="btn btn-primary btn-large" onClick={onOpenCalendly}>
               Let&apos;s discuss your idea
               <ArrowRight size={18} aria-hidden="true" />
-            </a>
+            </button>
             <a href="#contact-form" className="btn btn-secondary btn-large">
               Tell us what you want to build
             </a>
