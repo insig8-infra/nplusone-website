@@ -86,9 +86,7 @@ function App() {
 
           <Section
             id="what-we-do"
-            eyebrow="What we do"
             title="We turn ideas into working software."
-            description="NplusOne helps you move from unclear idea to useful product with product thinking, AI-first execution and hands-on software development."
           >
             <div className="grid gap-4 md:grid-cols-3">
               {whatWeDo.map((item) => {
@@ -106,9 +104,7 @@ function App() {
 
           <Section
             id="services"
-            eyebrow="Services"
             title="From first thought to first launch."
-            description="Start with discovery, move into a prototype or MVP, then scale into the platform or workflow your business needs."
           >
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => {
@@ -126,9 +122,7 @@ function App() {
 
           <Section
             id="who-this-is-for"
-            eyebrow="Who this is for"
             title="Built for people who know the problem, not necessarily the code."
-            description="You do not need a perfect brief, a technical co-founder or a complete product spec. You need a clear problem and a practical next step."
             className="section-band"
           >
             <div className="grid gap-3 md:grid-cols-2">
@@ -143,9 +137,7 @@ function App() {
 
           <Section
             id="use-cases"
-            eyebrow="Use cases"
             title="Product directions we understand."
-            description="Examples of what we can build, shape or support. These are capability directions, not exaggerated case-study claims."
           >
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
               {useCases.map((item) => {
@@ -163,9 +155,7 @@ function App() {
 
           <Section
             id="how-it-works"
-            eyebrow="How it works"
             title="How we move from idea to execution."
-            description="Every idea is different, so NplusOne starts with a first discussion and then suggests the right scope, timeline and quote."
             className="section-band"
           >
             <div className="grid gap-4 md:grid-cols-4">
@@ -181,9 +171,7 @@ function App() {
 
           <Section
             id="privacy"
-            eyebrow="Trust"
             title="Your idea stays yours."
-            description="A founder should feel safe sharing an early idea. NplusOne works with practical confidentiality, clean handover and controlled access from the first conversation."
           >
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {trustPrinciples.map((principle) => {
@@ -208,9 +196,7 @@ function App() {
 
           <Section
             id="proof"
-            eyebrow="Proof"
             title="Building in public, one useful product at a time."
-            description="This area is ready for real customer stories, demo notes and workflow transformations as they become available."
           >
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {proofPlaceholders.map((item) => (
@@ -225,49 +211,26 @@ function App() {
 
           <Section
             id="book-call"
-            eyebrow="Book a call"
             title="Schedule a discovery call."
-            description="Choose a time that works for you. The scheduler stays inside the page, so you can book a slot and continue exploring NplusOne without losing context."
             className="booking-section"
           >
             <CalendlyInline calendlyUrl={calendlyUrl} />
-            <div className="booking-after-row">
-              <span>No tech background needed. Bring the problem, workflow or product idea.</span>
-              <a href="#contact-form" className="footer-link">
-                Prefer writing first? Send an enquiry
-              </a>
-            </div>
           </Section>
 
           <Section
             id="contact"
-            eyebrow="Contact"
             title="Have an idea? Let's talk."
-            description="Share what you're thinking. You don't need a perfect brief - a rough idea is enough."
             className="contact-section"
           >
             <div className="contact-grid">
               <aside className="contact-panel">
                 <div className="contact-panel-intro">
-                  <p className="text-sm font-semibold uppercase tracking-[0.16em] text-stone-500">
-                    Start with a discussion
-                  </p>
-                  <h3 className="mt-3 text-2xl font-bold tracking-tight text-stone-950">
+                  <h3 className="text-2xl font-bold tracking-tight text-stone-950">
                     Book a discovery call or send a short enquiry.
                   </h3>
                   <p className="mt-3 leading-7 text-stone-600">
-                    After we understand the idea, NplusOne can suggest the right product plan,
-                    technical approach, timeline and quote.
+                    You do not need a perfect brief. A rough idea is enough.
                   </p>
-                </div>
-
-                <div className="contact-next-card">
-                  <p>What happens next</p>
-                  <ul>
-                    <li>We understand the idea and what is blocked.</li>
-                    <li>We suggest the right first version and build path.</li>
-                    <li>You get scope, timeline and pricing after discovery.</li>
-                  </ul>
                 </div>
 
                 <div className="contact-route-grid">
@@ -300,9 +263,7 @@ function App() {
 
           <Section
             id="faq"
-            eyebrow="FAQ"
             title="Questions founders usually ask."
-            description="Clear answers for the first conversation."
           >
             <div className="grid gap-3">
               {faqs.map((faq) => (
