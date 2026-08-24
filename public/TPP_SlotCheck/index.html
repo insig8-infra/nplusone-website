@@ -39,16 +39,9 @@
     gap: 16px;
     flex-wrap: wrap;
   }
-  .brand { display: flex; align-items: center; gap: 14px; }
-  .brand-mark {
-    width: 46px; height: 46px; border-radius: 13px;
-    background: linear-gradient(135deg, #2f6fed, #1d4ed8);
-    color: #fff; font-weight: 800; font-size: 15px;
-    display: grid; place-items: center; letter-spacing: 0.5px;
-    box-shadow: 0 8px 18px rgba(29, 78, 216, 0.22);
-  }
-  .brand h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
-  .brand p { margin: 3px 0 0; color: var(--muted); font-size: 13.5px; }
+  .brand { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
+  .brand-logo { height: 62px; width: auto; display: block; }
+  .brand p { margin: 0; color: var(--muted); font-size: 13.5px; }
 
   .legend { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; padding-top: 4px; }
   .legend span { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--muted); font-weight: 500; }
@@ -109,7 +102,7 @@
     overflow: hidden; box-shadow: 0 10px 30px rgba(22, 24, 29, 0.05);
   }
   .grid-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  table.grid { width: 100%; border-collapse: collapse; min-width: 640px; table-layout: fixed; }
+  table.grid { width: 100%; border-collapse: collapse; min-width: 0; table-layout: fixed; }
   table.grid thead th {
     position: sticky; top: 0; z-index: 2;
     background: #fafbfc; color: var(--muted);
@@ -162,8 +155,7 @@
 
   @media (max-width: 560px) {
     .wrap { padding: 16px 10px 40px; }
-    .brand h1 { font-size: 19px; }
-    .brand-mark { width: 40px; height: 40px; font-size: 13px; border-radius: 11px; }
+    .brand-logo { height: 48px; }
     .brand p { font-size: 12.5px; }
     .legend { gap: 12px; }
     .legend span { font-size: 11.5px; }
@@ -180,11 +172,8 @@
   <div class="wrap">
     <header class="site-header">
       <div class="brand">
-        <div class="brand-mark">TPP</div>
-        <div>
-          <h1>The Pickle Point</h1>
-          <p>Court availability · Hinjewadi, Pune</p>
-        </div>
+        <img src="tpp-logo.png" alt="The Pickle Point" class="brand-logo" />
+        <p>Court availability · Hinjewadi, Pune</p>
       </div>
       <div class="legend" aria-hidden="true">
         <span><span class="swatch avail"></span>Available</span>
