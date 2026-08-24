@@ -73,11 +73,7 @@ Recommended GitHub Pages settings:
 
 ## Brand Assets
 
-The selected logo is the exact approved embedded-raster SVG and is copied without modification from:
-
-```text
-/Users/sailsabnis/Insig8/brand-assets/nplusone-logo/svg/nplusone-logo-exact-raster-embedded.svg
-```
+The selected logo is the exact approved embedded-raster SVG and is copied without modification from the approved brand-assets source file `nplusone-logo-exact-raster-embedded.svg`.
 
 The site uses:
 
