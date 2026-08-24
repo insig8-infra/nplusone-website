@@ -15,6 +15,7 @@
     --border: #e5e7eb;
     --accent: #2f6fed;
     --accent-soft: #eaf1fe;
+    --available: #d6f2e0;
     --booked: #dfe2e8;
     --closed: #eceef1;
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Helvetica, Arial, sans-serif;
@@ -52,7 +53,7 @@
   .legend { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; padding-top: 4px; }
   .legend span { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--muted); font-weight: 500; }
   .swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--border); display: inline-block; }
-  .swatch.avail { background: #fff; }
+  .swatch.avail { background: var(--available); }
   .swatch.booked { background: var(--booked); }
   .swatch.closed { background: repeating-linear-gradient(135deg, #eceef1, #eceef1 4px, #e2e5ea 4px, #e2e5ea 8px); }
 
@@ -74,8 +75,8 @@
   }
   .date-nav button.primary:hover { background: #245ee0; }
   .date-strip {
-    flex: 1; display: flex; gap: 6px; overflow-x: auto; padding: 2px;
-    scrollbar-width: thin;
+    flex: 1; min-width: 0; display: flex; gap: 6px; overflow-x: auto; padding: 2px;
+    scrollbar-width: thin; -webkit-overflow-scrolling: touch;
   }
   .month-chip {
     flex: 0 0 auto; align-self: center;
@@ -101,7 +102,7 @@
     background: var(--card); border: 1px solid var(--border); border-radius: 16px;
     overflow: hidden; box-shadow: 0 10px 30px rgba(22, 24, 29, 0.05);
   }
-  .grid-scroll { overflow-x: auto; }
+  .grid-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   table.grid { width: 100%; border-collapse: collapse; min-width: 640px; table-layout: fixed; }
   table.grid thead th {
     position: sticky; top: 0; z-index: 2;
@@ -109,18 +110,22 @@
     font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
     padding: 11px 8px; text-align: center; border-bottom: 1px solid var(--border);
   }
-  table.grid thead th.time-col { width: 76px; text-align: left; padding-left: 14px; }
+  table.grid thead th.time-col {
+    width: 76px; text-align: left; padding-left: 14px;
+    left: 0; z-index: 3; background: #fafbfc;
+  }
   table.grid tbody th.time-col {
+    position: sticky; left: 0; z-index: 1; background: #fff;
     color: var(--muted); font-size: 11.5px; font-weight: 500; text-align: left;
     padding: 0 0 0 14px; vertical-align: middle; border-bottom: 1px solid #f0f1f4;
-    white-space: nowrap;
+    border-right: 1px solid var(--border); white-space: nowrap;
   }
   table.grid td {
     border-left: 1px solid #f0f1f4; border-bottom: 1px solid #f0f1f4;
     height: 40px; padding: 0;
   }
   td.cell { text-align: center; }
-  td.cell.available { background: #fff; }
+  td.cell.available { background: var(--available); }
   td.cell.booked { background: var(--booked); }
   tr.closed-row td {
     height: 18px; border-left: none; border-bottom: 1px solid #f0f1f4; padding: 0;
@@ -144,10 +149,20 @@
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
 
   .empty { padding: 40px; text-align: center; color: var(--muted); font-size: 14px; }
+
   @media (max-width: 560px) {
     .wrap { padding: 16px 10px 40px; }
     .brand h1 { font-size: 19px; }
+    .brand-mark { width: 40px; height: 40px; font-size: 13px; border-radius: 11px; }
+    .brand p { font-size: 12.5px; }
     .legend { gap: 12px; }
+    .legend span { font-size: 11.5px; }
+    .date-nav { flex-wrap: wrap; row-gap: 8px; }
+    .date-strip { flex-basis: 100%; order: 10; margin-top: 2px; }
+    table.grid thead th { font-size: 10px; padding: 9px 6px; }
+    table.grid thead th.time-col { width: 62px; padding-left: 10px; }
+    table.grid tbody th.time-col { font-size: 11px; padding-left: 10px; }
+    td.cell { height: 38px; }
   }
 </style>
 </head>
@@ -224,6 +239,11 @@
     var d = new Date(Date.now() + IST_OFFSET_MIN * 60000 + (offsetDays || 0) * 86400000);
     return d.toISOString().slice(0, 10);
   }
+  function nowMinutesIST() {
+    var d = new Date(Date.now() + IST_OFFSET_MIN * 60000);
+    return d.getUTCHours() * 60 + d.getUTCMinutes();
+  }
+  function isToday(iso) { return iso === istDateStr(0); }
   function fmtTime(hhmm) {
     var p = hhmm.split(":").map(Number);
     var h = p[0], m = p[1];
@@ -284,7 +304,7 @@
           throw new Error(json && json.error ? json.error : "bad response");
         }
       })
-      .catch(function (err) {
+      .catch(function () {
         connected = false;
         data = { courts: FALLBACK.courts, openTime: FALLBACK.openTime, closeTime: FALLBACK.closeTime, days: buildFallbackDays() };
         selected = istDateStr(0);
@@ -350,7 +370,6 @@
     body.innerHTML = "";
     var courts = data.courts || FALLBACK.courts;
 
-    // court headers
     for (var i = 0; i < 4; i++) {
       var h = document.getElementById("hCourt" + (i + 1));
       h.textContent = courts[i] != null ? "Court " + courts[i] : "—";
@@ -362,7 +381,12 @@
       return;
     }
 
+    var hidePast = isToday(selected);
+    var nowMin = nowMinutesIST();
+
     rows.forEach(function (row) {
+      if (hidePast && toMin(row.end) <= nowMin) return; // past slots are of no use to players
+
       var allClosed = courts.every(function (c) { return row.cells[c] === "closed"; });
       if (allClosed) {
         var tr = document.createElement("tr");
@@ -411,6 +435,16 @@
   });
 
   load();
+
+  // Keep "today" honest: re-evaluate past-slot hiding every minute without refetching.
+  setInterval(function () {
+    if (isToday(selected)) {
+      var sc = document.querySelector(".grid-scroll");
+      var sl = sc ? sc.scrollLeft : 0;
+      renderGrid();
+      if (sc) sc.scrollLeft = sl;
+    }
+  }, 60000);
 })();
 </script>
 </body>
