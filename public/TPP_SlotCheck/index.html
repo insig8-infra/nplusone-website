@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Pickle Point — Court Availability</title>
+<meta name="description" content="Live pickleball court availability at The Pickle Point, Hinjewadi, Pune." />
+<meta name="robots" content="index,follow" />
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --ink: #16181d;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #2f6fed;
+    --accent-soft: #eaf1fe;
+    --booked: #dfe2e8;
+    --closed: #eceef1;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    min-width: 320px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 20px 16px 48px; }
+
+  /* ---------- header ---------- */
+  .site-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-mark {
+    width: 46px; height: 46px; border-radius: 13px;
+    background: linear-gradient(135deg, #2f6fed, #1d4ed8);
+    color: #fff; font-weight: 800; font-size: 15px;
+    display: grid; place-items: center; letter-spacing: 0.5px;
+    box-shadow: 0 8px 18px rgba(29, 78, 216, 0.22);
+  }
+  .brand h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  .brand p { margin: 3px 0 0; color: var(--muted); font-size: 13.5px; }
+
+  .legend { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; padding-top: 4px; }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--muted); font-weight: 500; }
+  .swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--border); display: inline-block; }
+  .swatch.avail { background: #fff; }
+  .swatch.booked { background: var(--booked); }
+  .swatch.closed { background: repeating-linear-gradient(135deg, #eceef1, #eceef1 4px, #e2e5ea 4px, #e2e5ea 8px); }
+
+  /* ---------- date navigation ---------- */
+  .date-nav {
+    display: flex; align-items: center; gap: 8px;
+    margin: 22px 0 6px;
+  }
+  .date-nav button {
+    border: 1px solid var(--border); background: #fff; color: var(--ink);
+    border-radius: 10px; cursor: pointer; font: inherit;
+    height: 38px; min-width: 38px; padding: 0 10px; display: grid; place-items: center;
+    font-size: 16px; transition: background 120ms ease, border-color 120ms ease;
+  }
+  .date-nav button:hover { background: #f1f3f6; }
+  .date-nav button.primary {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+    font-size: 13px; font-weight: 600; padding: 0 14px;
+  }
+  .date-nav button.primary:hover { background: #245ee0; }
+  .date-strip {
+    flex: 1; display: flex; gap: 6px; overflow-x: auto; padding: 2px;
+    scrollbar-width: thin;
+  }
+  .month-chip {
+    flex: 0 0 auto; align-self: center;
+    background: var(--accent); color: #fff; font-size: 10.5px; font-weight: 800;
+    letter-spacing: 0.06em; border-radius: 7px; padding: 5px 8px;
+  }
+  .day-chip {
+    flex: 0 0 auto; width: 58px; padding: 6px 0 7px; text-align: center;
+    border: 1px solid var(--border); background: #fff; border-radius: 10px; cursor: pointer;
+    transition: background 120ms ease, border-color 120ms ease;
+  }
+  .day-chip:hover { background: #f1f3f6; }
+  .day-chip .dow { font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; }
+  .day-chip .num { font-size: 17px; font-weight: 700; margin-top: 1px; }
+  .day-chip.today-chip .dow { color: var(--accent); }
+  .day-chip.selected {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .day-chip.selected .dow, .day-chip.selected .num { color: #fff; }
+
+  /* ---------- grid ---------- */
+  .grid-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; box-shadow: 0 10px 30px rgba(22, 24, 29, 0.05);
+  }
+  .grid-scroll { overflow-x: auto; }
+  table.grid { width: 100%; border-collapse: collapse; min-width: 640px; table-layout: fixed; }
+  table.grid thead th {
+    position: sticky; top: 0; z-index: 2;
+    background: #fafbfc; color: var(--muted);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 11px 8px; text-align: center; border-bottom: 1px solid var(--border);
+  }
+  table.grid thead th.time-col { width: 76px; text-align: left; padding-left: 14px; }
+  table.grid tbody th.time-col {
+    color: var(--muted); font-size: 11.5px; font-weight: 500; text-align: left;
+    padding: 0 0 0 14px; vertical-align: middle; border-bottom: 1px solid #f0f1f4;
+    white-space: nowrap;
+  }
+  table.grid td {
+    border-left: 1px solid #f0f1f4; border-bottom: 1px solid #f0f1f4;
+    height: 40px; padding: 0;
+  }
+  td.cell { text-align: center; }
+  td.cell.available { background: #fff; }
+  td.cell.booked { background: var(--booked); }
+  tr.closed-row td {
+    height: 18px; border-left: none; border-bottom: 1px solid #f0f1f4; padding: 0;
+  }
+  .closed-band {
+    height: 100%; display: flex; align-items: center; justify-content: center;
+    background: repeating-linear-gradient(135deg, #eceef1, #eceef1 4px, #e2e5ea 4px, #e2e5ea 8px);
+    color: #9aa1ab; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+
+  .footnote { color: var(--muted); font-size: 12.5px; margin-top: 12px; line-height: 1.5; }
+  .footnote a { color: var(--accent); text-decoration: none; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 7px; margin-left: 8px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 11.5px; font-weight: 700; border-radius: 999px; padding: 3px 10px;
+  }
+  .status-pill.warn { background: #fdf3e7; color: #b45309; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .status-pill.warn .dot { animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  .empty { padding: 40px; text-align: center; color: var(--muted); font-size: 14px; }
+  @media (max-width: 560px) {
+    .wrap { padding: 16px 10px 40px; }
+    .brand h1 { font-size: 19px; }
+    .legend { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site-header">
+      <div class="brand">
+        <div class="brand-mark">TPP</div>
+        <div>
+          <h1>The Pickle Point</h1>
+          <p>Court availability · Hinjewadi, Pune</p>
+        </div>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><span class="swatch avail"></span>Available</span>
+        <span><span class="swatch booked"></span>Booked</span>
+        <span><span class="swatch closed"></span>Closed</span>
+      </div>
+    </header>
+
+    <div class="date-nav">
+      <button id="prevBtn" aria-label="Previous day">&#8249;</button>
+      <div class="date-strip" id="dateStrip"></div>
+      <button id="nextBtn" aria-label="Next day">&#8250;</button>
+      <button id="todayBtn" class="primary">Today</button>
+    </div>
+
+    <div class="grid-card">
+      <div class="grid-scroll">
+        <table class="grid">
+          <thead>
+            <tr>
+              <th class="time-col">Time</th>
+              <th id="hCourt1">Court 1</th>
+              <th id="hCourt2">Court 2</th>
+              <th id="hCourt3">Court 3</th>
+              <th id="hCourt4">Court 4</th>
+            </tr>
+          </thead>
+          <tbody id="gridBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="footnote" id="footnote"></p>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---- config ----
+  // Replace with the Apps Script web-app URL after you deploy the backend.
+  var DATA_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+  var IST_OFFSET_MIN = 330; // Asia/Kolkata, no DST
+  var FALLBACK = {
+    courts: [1, 2, 3, 4],
+    openTime: "07:00",
+    closeTime: "24:00",
+    displayStart: "00:00",
+    displayEnd: "24:00",
+    slotMinutes: 30
+  };
+
+  var data = null;       // backend payload
+  var selected = null;   // "YYYY-MM-DD"
+  var connected = false;
+
+  // ---- time helpers ----
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function toMin(t) { var p = t.split(":").map(Number); return p[0] * 60 + p[1]; }
+  function fromMin(m) { return pad2(Math.floor(m / 60)) + ":" + pad2(m % 60); }
+  function istDateStr(offsetDays) {
+    var d = new Date(Date.now() + IST_OFFSET_MIN * 60000 + (offsetDays || 0) * 86400000);
+    return d.toISOString().slice(0, 10);
+  }
+  function fmtTime(hhmm) {
+    var p = hhmm.split(":").map(Number);
+    var h = p[0], m = p[1];
+    var ap = h >= 12 ? "PM" : "AM";
+    var h12 = h % 12; if (h12 === 0) h12 = 12;
+    return h12 + ":" + pad2(m) + " " + ap;
+  }
+  function fmtDateLong(iso) {
+    var p = iso.split("-").map(Number);
+    var d = new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+    return d.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  }
+
+  // ---- fallback (rendered until the backend is wired up) ----
+  function buildFallbackDays() {
+    var days = {};
+    for (var i = 0; i < 45; i++) {
+      var date = istDateStr(i);
+      days[date] = buildEmptyDay(FALLBACK);
+    }
+    return days;
+  }
+  function buildEmptyDay(cfg) {
+    var open = toMin(cfg.openTime), close = toMin(cfg.closeTime);
+    var dStart = toMin(cfg.displayStart), dEnd = toMin(cfg.displayEnd);
+    var rows = [];
+    for (var m = dStart; m < dEnd; m += cfg.slotMinutes) {
+      var cells = {};
+      cfg.courts.forEach(function (c) {
+        cells[c] = (m < open || m + cfg.slotMinutes > close) ? "closed" : "available";
+      });
+      rows.push({ start: fromMin(m), end: fromMin(m + cfg.slotMinutes), cells: cells });
+    }
+    return rows;
+  }
+
+  // ---- data load ----
+  function load() {
+    setStatus("Loading…", false);
+    if (DATA_URL.indexOf("YOUR_SCRIPT_ID") !== -1) {
+      connected = false;
+      data = { courts: FALLBACK.courts, openTime: FALLBACK.openTime, closeTime: FALLBACK.closeTime, days: buildFallbackDays() };
+      selected = istDateStr(0);
+      setStatus("Setup pending — live data not connected yet", true);
+      render();
+      return;
+    }
+    fetch(DATA_URL, { method: "GET" })
+      .then(function (r) { return r.json(); })
+      .then(function (json) {
+        if (json && json.ok) {
+          connected = true;
+          data = json;
+          selected = istDateStr(0);
+          if (!data.days[selected]) selected = Object.keys(data.days)[0];
+          setStatus("Live · updates automatically", false);
+        } else {
+          throw new Error(json && json.error ? json.error : "bad response");
+        }
+      })
+      .catch(function (err) {
+        connected = false;
+        data = { courts: FALLBACK.courts, openTime: FALLBACK.openTime, closeTime: FALLBACK.closeTime, days: buildFallbackDays() };
+        selected = istDateStr(0);
+        setStatus("Could not reach live data — showing sample layout", true);
+      })
+      .then(function () { render(); });
+  }
+
+  function setStatus(text, warn) {
+    var el = document.getElementById("footnote");
+    el.innerHTML =
+      '<span class="status-pill' + (warn ? " warn" : "") + '"><span class="dot"></span>' + text + "</span>" +
+      '<span> &nbsp;Open daily 7:00 AM – 12:00 AM · Hinjewadi, Pune.</span>';
+  }
+
+  // ---- render ----
+  function render() {
+    renderStrip();
+    renderGrid();
+  }
+
+  function dayKeys() { return Object.keys(data.days).sort(); }
+
+  function renderStrip() {
+    var strip = document.getElementById("dateStrip");
+    var keys = dayKeys();
+    strip.innerHTML = "";
+    var lastMonth = "";
+    keys.forEach(function (d) {
+      var p = d.split("-").map(Number);
+      var dt = new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+      var mon = dt.toLocaleDateString("en-US", { month: "short" }).toUpperCase();
+      if (mon !== lastMonth) {
+        lastMonth = mon;
+        var mc = document.createElement("span");
+        mc.className = "month-chip";
+        mc.textContent = mon;
+        strip.appendChild(mc);
+      }
+      var chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "day-chip" + (d === selected ? " selected" : "") + (d === istDateStr(0) ? " today-chip" : "");
+      var dow = document.createElement("div");
+      dow.className = "dow";
+      dow.textContent = dt.toLocaleDateString("en-US", { weekday: "short" });
+      var num = document.createElement("div");
+      num.className = "num";
+      num.textContent = String(p[2]);
+      chip.appendChild(dow);
+      chip.appendChild(num);
+      chip.addEventListener("click", function () { selected = d; render(); scrollSelectedIntoView(); });
+      strip.appendChild(chip);
+    });
+  }
+
+  function scrollSelectedIntoView() {
+    var sel = document.querySelector(".day-chip.selected");
+    if (sel && sel.scrollIntoView) sel.scrollIntoView({ inline: "center", behavior: "smooth", block: "nearest" });
+  }
+
+  function renderGrid() {
+    var body = document.getElementById("gridBody");
+    body.innerHTML = "";
+    var courts = data.courts || FALLBACK.courts;
+
+    // court headers
+    for (var i = 0; i < 4; i++) {
+      var h = document.getElementById("hCourt" + (i + 1));
+      h.textContent = courts[i] != null ? "Court " + courts[i] : "—";
+    }
+
+    var rows = data.days[selected];
+    if (!rows || !rows.length) {
+      body.innerHTML = '<tr><td colspan="5" class="empty">No availability for ' + fmtDateLong(selected) + ".</td></tr>";
+      return;
+    }
+
+    rows.forEach(function (row) {
+      var allClosed = courts.every(function (c) { return row.cells[c] === "closed"; });
+      if (allClosed) {
+        var tr = document.createElement("tr");
+        tr.className = "closed-row";
+        var td = document.createElement("td");
+        td.colSpan = 5;
+        var band = document.createElement("div");
+        band.className = "closed-band";
+        band.textContent = "Closed";
+        td.appendChild(band);
+        tr.appendChild(td);
+        body.appendChild(tr);
+        return;
+      }
+      var tr = document.createElement("tr");
+      var th = document.createElement("th");
+      th.className = "time-col";
+      th.scope = "row";
+      th.textContent = fmtTime(row.start);
+      tr.appendChild(th);
+      courts.forEach(function (c) {
+        var td = document.createElement("td");
+        td.className = "cell " + (row.cells[c] || "available");
+        td.title = "Court " + c + " · " + fmtTime(row.start) + " – " + fmtTime(row.end) + " — " + (row.cells[c] === "booked" ? "Booked" : "Available");
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
+
+  // ---- navigation ----
+  function shift(delta) {
+    var keys = dayKeys();
+    var idx = keys.indexOf(selected);
+    var next = idx + delta;
+    if (next < 0 || next >= keys.length) return;
+    selected = keys[next];
+    render();
+    scrollSelectedIntoView();
+  }
+  document.getElementById("prevBtn").addEventListener("click", function () { shift(-1); });
+  document.getElementById("nextBtn").addEventListener("click", function () { shift(1); });
+  document.getElementById("todayBtn").addEventListener("click", function () {
+    var t = istDateStr(0);
+    if (data.days[t]) { selected = t; render(); scrollSelectedIntoView(); }
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
